@@ -1,0 +1,7 @@
+.card {
+    transition: transform 0.3s; /* Add a smooth transition effect */
+  }
+
+.card:hover {
+transform: scale(1.1); /* Expand the card when hovered over */
+}
