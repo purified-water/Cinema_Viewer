@@ -1,7 +1,51 @@
-.card {
-    transition: transform 0.3s; /* Add a smooth transition effect */
-  }
 
-.card:hover {
+.movie-item:hover {
 transform: scale(1.1); /* Expand the card when hovered over */
+}
+
+.dark {
+  background: rgb(14, 48, 87);
+  color: white;
+}
+
+.light {
+  background: rgb(231, 231, 231);
+  color: black;
+}
+
+#header {
+  background: rgb(192, 192, 192);
+}
+
+#navbar {
+  background: rgb(192, 192, 192);
+  color: black;
+}
+
+.dark #header {
+  background: rgb(9, 31, 55);
+  color: white;
+}
+
+.dark #navbar {
+  background: rgb(9, 31, 55);
+  color: white;
+}
+
+.dark #footer {
+  background: rgb(9, 31, 55);
+  color: white;
+
+}
+
+.dark .navbar-brand {
+  color: white;
+
+}
+.movie-item {
+  height: 200px;
+  width: 350px;
+  border-radius: 2px;
+  transition: transform 0.3s; /* Add a smooth transition effect */
+
 }
