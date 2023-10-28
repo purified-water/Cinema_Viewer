@@ -1,10 +1,10 @@
 
 export default {
   fetch(query) {
-    
+    console.log('fetched');
+
     const [type, className, pattern, queryString] = query.split('/');
     const params = new URLSearchParams(queryString);
-
     if (type === 'search') {
       // Handle search request
       const searchTerm = className;

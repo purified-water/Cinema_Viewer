@@ -2,11 +2,13 @@ import vue_head from "./vuejs/head.js"
 import vue_nav from './vuejs/nav.js'
 import vue_content from './vuejs/content.js'
 import vue_footer from './vuejs/footer.js'
+import movies from './db/data.js'
 
 export default {
     data() {
         return {
           mode: 'light',
+          data: movies,
         }
     },
     methods: {
@@ -25,7 +27,8 @@ export default {
         vue_head, 
         vue_nav,  
         vue_content, 
-        vue_footer
+        vue_footer,
+        movies
     },
     template: `
     <div class="container " :class="mode" style="max-width: 1200px">
@@ -36,7 +39,7 @@ export default {
       <vue_nav :mode="mode" />
       </div>
       <div class="row">
-        <vue_content/>
+        <vue_content :moviesData="data"/>
       </div>
       <vue_footer/>
     </div>

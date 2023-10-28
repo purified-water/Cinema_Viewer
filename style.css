@@ -33,6 +33,7 @@ transform: scale(1.1); /* Expand the card when hovered over */
 }
 
 .dark #footer {
+  z-index: -10;
   background: rgb(9, 31, 55);
   color: white;
 
