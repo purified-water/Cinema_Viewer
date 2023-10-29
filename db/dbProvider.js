@@ -1,23 +1,26 @@
 
 export default {
   async fetch(requestString, data) {
-    const [type, movieClass, pattern] = requestString.split("/");
+    //Tach cai url ra
+    const [type, className, pattern] = requestString.split("/");
+
+    //“<type>/<class>/pattern?param1=value1&param2=value2&...”
     const params = new URLSearchParams(pattern);
 
     //Chooose the class depending on movieClass
     let getMovieClass;
 
-    switch (movieClass) {
-      case "MostPopularMovies":
+    switch (className) {
+      case "mostpopular":
         getMovieClass = data.MostPopularMovies;
         break;
-      case "Top50Movies":
+      case "top50":
         getMovieClass = data.Top50Movies;
         break;
-      case "Movies":
+      case "movie":
       getMovieClass = data.Movies;
       break;
-      case "Names":
+      case "name":
       getMovieClass = data.Names;
       break;
 
@@ -25,20 +28,54 @@ export default {
         break;
     }
 
-  
-
+    
     if (type === "search") {
       //Tasch smith?per_page=10&page=2”
+      //Truoc dau ?
       const searchTerm = pattern.split("?")[0]
-
-
 
       // Xử lý tìm kiếm
       const perPage = params.get("per_page") || 10;
       const page = params.get("page") || 1;
-
+      
+      let tempData = null;
       // Thực hiện tìm kiếm
-      const results = data.filter(movie => movie.title.toLowerCase().includes(searchTerm.toLowerCase()));
+      switch (className) {
+        case 'movie':
+            tempData = data.Movies;
+            if (pattern) {
+                tempData = data.Movies.filter((movie) => movie.title.includes(searchTerm) || 
+                movie.fullTitle.includes(searchTerm) || 
+                movie.keywords.includes(searchTerm) )
+            }
+            break;
+        case 'name':
+            tempData = data.Names;
+            if (pattern) {
+                tempData = data.Names.filter((name) => name.name.includes(searchTerm));
+            }
+            break;
+        case 'top50':
+            tempData = data.Top50Movies;
+            if (pattern){
+                tempData = data.Top50Movies.filter((movie) => movie.fullTitle.includes(searchTerm) 
+                || movie.title.includes(searchTerm)
+                )
+            }
+            break;
+        case 'mostpopular':
+            tempData = data.MostPopularMovies;
+            if (pattern) {
+                tempData = data.MostPopularMovies.filter((movie)=> movie.fullTitle.includes(searchTerm)
+                || movie.title.includes(searchTerm)
+                )
+            }
+            break;
+        default:
+            break;
+    }
+
+      const results = tempData;
 
       // Tính toán thông tin phân trang
       const total = results.length;
@@ -51,19 +88,25 @@ export default {
         per_page: parseInt(perPage),
         total_page: totalPage,
         total: total,
-        items: results.slice((page - 1) * perPage, page * perPage)
+        data: results.slice((page - 1) * perPage, page * perPage)
       };
     } 
     
     else if (type === "detail") {
       // Xử lý chi tiết
-      const id = pattern;
-
-      // Tìm kiếm thông tin chi tiết bằng id
-      const movie = getMovieClass.find(movie => movie.id === id);
-
-      // Trả về kết quả
-      return movie;
+      let tempData = null;
+      switch (className) {
+        case 'movie':
+            tempData = data.Movies.find((movie) => movie.id === pattern);
+            break;
+        case 'name':
+            tempData = data.Names.find((name) => name.id === pattern);
+            break;
+      }
+      return {
+        data: tempData,
+        total: tempData ? 1 : 0,
+      }
     } 
     
     else if (type === "get") {

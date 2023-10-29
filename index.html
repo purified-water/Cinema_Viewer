@@ -17,8 +17,6 @@
     ></script>
 
     <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
     <script type="importmap">
       {
         "imports": {
@@ -26,10 +24,16 @@
         }
       }
     </script>
+  </head>
+  <body>
+   
     <script type="module">
       import { createApp } from "vue";
       import main from "./main.js";
-      createApp(main).mount("#app");
+      const app = createApp(main);
+
+      app.mount("#app");
+
       // import Vue from "vue"
       // import vueRouter from "vue-router"
       // import main from "./main.js";
@@ -38,7 +42,6 @@
       // new Vue ({
       //   render: (h) => h(main)
       // }).$mount("#app")
-
     </script>
 
     <div id="app"></div>

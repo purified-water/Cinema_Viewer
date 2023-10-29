@@ -4,13 +4,17 @@ import vue_content from './vuejs/content.js'
 import vue_footer from './vuejs/footer.js'
 import movies from './db/data.js'
 import dbProvider from "./db/dbProvider.js"
+import DetailScreen from './vuejs/detail_screen.js';
+import SearchScreen from './vuejs/search_screen.js';
 import { computed } from 'vue'
-
 
 
 export default {
     data() {
         return {
+          selectedMovie: null,
+          readyToShow: true,
+
           mode: 'light',
           data: movies,
           popularMovies: [],
@@ -19,7 +23,12 @@ export default {
           topRatedMovies: [],
           topRatedPages: {},
 
-          recentMovies: []
+          recentMovies: [],
+          recentPages: {},
+
+          isSearching: false,
+          searchingMovie: null,
+
         }
     },
     provide() {
@@ -29,12 +38,13 @@ export default {
         recentMovies: computed(() => this.recentMovies),
         popularPages: computed(() => this.popularPages),
         topRatedPages: computed(() => this.topRatedPages),
+        recentPages: computed(() => this.recentPages),
       }
     },
     methods: {
       getPopularMovies() {
 
-        dbProvider.fetch("get/MostPopularMovies/?per_page=3&page=1", this.data)
+        dbProvider.fetch("get/mostpopular/?per_page=3&page=1", this.data)
           .then(result => {
             // Access the data inside the fulfilled promise
             this.popularMovies = result.data;
@@ -52,7 +62,7 @@ export default {
        
       },
       changePopularPage(n) {
-        dbProvider.fetch(`get/MostPopularMovies/?per_page=3&page=${n}`, this.data)
+        dbProvider.fetch(`get/mostpopular/?per_page=3&page=${n}`, this.data)
           .then(result => {
             // Access the data inside the fulfilled promise
             this.popularMovies = result.data;
@@ -70,7 +80,7 @@ export default {
 
       getTopRatedMovies() {
 
-        dbProvider.fetch("get/Top50Movies/?per_page=3&page=1", this.data)
+        dbProvider.fetch("get/top50/?per_page=3&page=1", this.data)
           .then(result => {
             // Access the data inside the fulfilled promise
             this.topRatedMovies = result.data;
@@ -88,7 +98,7 @@ export default {
       },
 
       changeTopRatedPage(n) {
-        dbProvider.fetch(`get/Top50Movies/?per_page=3&page=${n}`, this.data)
+        dbProvider.fetch(`get/top50/?per_page=3&page=${n}`, this.data)
           .then(result => {
             // Access the data inside the fulfilled promise
             this.topRatedMovies = result.data;
@@ -107,7 +117,7 @@ export default {
 
       getRecentMovies() {
 
-        dbProvider.fetch("get/Movies/?per_page=1&page=1", this.data)
+        dbProvider.fetch("get/movie/?per_page=1&page=1", this.data)
           .then(result => {
             // Access the data inside the fulfilled promise
             this.recentMovies = result.data;
@@ -121,6 +131,28 @@ export default {
        
       },
 
+      // hien thi detail
+      showMovieDetail(movie) {
+        dbProvider.fetch(`detail/movie/${movie.id}`, this.data)
+          .then(result => {
+            // Access the data inside the fulfilled promise
+            this.selectedMovie = result.data;
+            console.log('SELECTED', this.selectedMovie);
+
+          })
+          .catch(error => {
+            console.error(error);
+          });
+
+        this.readyToShow = false;
+      },
+      //Quay ve
+      goBackToContent() {
+        this.selectedMovie = null;
+        this.isSearching = false;
+        this.searchingMovie = null;
+        this.readyToShow = true;
+      },
 
       toggle() {
         if (this.mode === 'light') {
@@ -128,8 +160,25 @@ export default {
         } else {
             this.mode = 'light';
         }
+      },
 
-        console.log('Toggled')
+      //Tim kiem
+      searchData(searchInput) {
+        //Lay movie truoc
+        dbProvider.fetch(`search/movie/${searchInput}`, this.data)
+          .then(result => {
+            // Access the data inside the fulfilled promise
+            this.searchingMovie = result.data;
+            this.isSearching = true;
+            console.log('SEARCHED', this.searchingMovie);
+
+
+          })
+          .catch(error => {
+            console.error(error);
+          });
+
+        this.readyToShow = false;
       }
 
     },
@@ -140,7 +189,9 @@ export default {
         vue_content, 
         vue_footer,
         movies,
-        dbProvider
+        dbProvider,
+        DetailScreen,
+        SearchScreen
     },
     mounted() {
       this.getPopularMovies();
@@ -148,19 +199,27 @@ export default {
       this.getRecentMovies();
     },
     template: `
-    <div class="container " :class="mode" style="max-width: 1200px">
+    <div class="container " :class="mode" style="max-width: 1200px;">
       <div class="row">
         <vue_head @toggle='toggle'/>
       </div>
       <div class="row mb-3">
-      <vue_nav :mode="mode" />
+      <vue_nav :mode="mode" 
+        @goBack="goBackToContent"
+        @search="searchData"
+        />
       </div>
       <div class="row">
         <vue_content
+          v-if="readyToShow"
+          @showDetail="showMovieDetail"
           @changePopularPage="changePopularPage"
           @changeTopRatedPage="changeTopRatedPage"
         />
+        <DetailScreen v-if="selectedMovie" :selectedMovie="selectedMovie"/> 
+        <SearchScreen :mode="mode" v-if="isSearching" :searchingMovie="searchingMovie"/>
       </div>
+
       <vue_footer/>
     </div>
 

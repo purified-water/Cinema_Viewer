@@ -19,23 +19,34 @@ export default {
     //   mostPopularMovies: Object,
     // },
     methods: {
+
+      showMovieDetail(movie) {
+
+        this.$emit('showDetail', movie);
+      },
+
       nextPopularMovies() {
+        console.log('NEX', this.n)
+
+        this.popularMoviesPage = this.n;
         if (this.popularMoviesPage < 5) {
-          this.popularMoviesPage++;
-          this.populateMovies();
+          this.$emit('changePopularPage', this.n + 1);
+
         } else { //Out of scope
-          this.popularMoviesPage = 0;
-          this.populateMovies();
+          this.$emit('changePopularPage', 0);
+
         }
       },
 
       prevPopularMovies() {
+        console.log('Prev', this.n)
+        this.popularMoviesPage = this.n;
         if (this.popularMoviesPage > 0) {
-          this.popularMoviesPage--;
-          this.populateMovies();
+          this.$emit('changePopularPage', this.n - 1);
+
         } else { //Out of scope
-          this.popularMoviesPage = 5;
-          this.populateMovies();
+          this.$emit('changePopularPage', 5);
+
         }
       },
 
@@ -79,6 +90,7 @@ export default {
     >
       <img
         class="rounded-1"
+        @click="showMovieDetail(movie)"
         :src="movie.image"
         :alt="movie.title"
         style="width: 100%; height: 100%; object-fit: cover"
@@ -87,22 +99,23 @@ export default {
   </div>
 
   <!--- Most popular --->
-  <div class="row d-flex justify-content-between" style="height: fit-content">
-    <div class="d-flex align-items-center">
-      <span class="fs-6">Most popular</span>
-    </div>
+  <div class="row">
+  <div class="col-6 d-flex align-items-center">
+    <span class="fs-3">Most Popular</span>
+  </div>
+  <div class="col-6 d-flex justify-content-end">
     <ul class="pagination">
       <li
         v-for="n in popularPages.total_pages"
         :class="{ active: n === popularPages.page }"
-        class="page-item"
+        class="page-item-m"
       >
         <a class="page-link" href="#" @click="$emit('changePopularPage', n)">
-          {{ n }}
         </a>
       </li>
     </ul>
   </div>
+</div>
 
   <div class="d-flex justify-content-around">
     <a
@@ -110,7 +123,7 @@ export default {
       aria-label="Previous"
       @click="prevPopularMovies"
     >
-      <span aria-hidden="true">&laquo;</span>
+      <span aria-hidden="true">&lt;</span>
     </a>
 
     <div class="movie-item" v-for="movie in popularMovies" :key="movie.id">
@@ -118,6 +131,7 @@ export default {
         <img
           @mouseenter="hoveredMovie = movie"
           @mouseleave="hoveredMovie = null"
+          @click="showMovieDetail(movie)"
           class="rounded-1"
           :src="movie.image"
           :alt="movie.title"
@@ -134,27 +148,28 @@ export default {
       aria-label="Next"
       @click="nextPopularMovies"
       >
-      <span aria-hidden="true">&raquo;</span>
+      <span aria-hidden="true">&gt;</span>
     </a>
   </div>
   <!--- Top rating --->
 
-  <div class="row d-flex justify-content-between" style="height: fit-content">
-    <div class="d-flex align-items-center">
-      <span class="fs-6">Top rating</span>
-    </div>
+  <div class="row">
+  <div class="col-6 d-flex align-items-center">
+    <span class="fs-3">Top Rating</span>
+  </div>
+  <div class="col-6 d-flex justify-content-end">
     <ul class="pagination">
       <li
         v-for="n in topRatedPages.total_pages"
         :class="{ active: n === topRatedPages.page }"
-        class="page-item"
+        class="page-item-m"
       >
         <a class="page-link" href="#" @click="$emit('changeTopRatedPage', n)">
-          {{ n }}
         </a>
       </li>
     </ul>
   </div>
+</div>
 
   <div class="d-flex justify-content-around">
     <a
@@ -162,7 +177,7 @@ export default {
       href="#"
       aria-label="Previous"
     >
-      <span aria-hidden="true">&laquo;</span>
+      <span aria-hidden="true">&lt;</span>
     </a>
 
     <div class="movie-item" v-for="movie in topRatedMovies" :key="movie.id">
@@ -170,6 +185,7 @@ export default {
         <img
           @mouseenter="hoveredMovie = movie"
           @mouseleave="hoveredMovie = null"
+          @click="showMovieDetail(movie)"
           class="rounded-1"
           :src="movie.image"
           :alt="movie.title"
@@ -186,7 +202,7 @@ export default {
     </div>
 
     <a class="page-link d-flex align-items-center" href="#" aria-label="Next">
-      <span aria-hidden="true">&raquo;</span>
+      <span aria-hidden="true">&gt;</span>
     </a>
   </div>
 </div>

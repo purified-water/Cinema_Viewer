@@ -1,6 +1,8 @@
 
 .movie-item:hover {
-transform: scale(1.1); /* Expand the card when hovered over */
+  transform: scale(1.2); /* Expand the card when hovered over */
+  z-index: 100;
+
 }
 
 .dark {
@@ -44,8 +46,44 @@ transform: scale(1.1); /* Expand the card when hovered over */
 }
 .movie-item {
   height: 200px;
-  width: 350px;
+  width: 370px;
   border-radius: 2px;
   transition: transform 0.3s; /* Add a smooth transition effect */
 
+}
+.pagination {
+  margin-right: 5px;
+  padding: 0;
+  display: flex;
+  align-items: flex-end;
+  list-style: none;
+  z-index: 1;
+  
+
+}
+.page-item-m {
+  width: 30px;
+  height: 5px;
+  float: left;
+  margin: 1px;
+
+  cursor: pointer;
+  transition: 0.3s ease width;
+}
+.pagination .page-item-m .page-link {
+  background-color: #b9b9b9;
+
+}
+.pagination .page-item-m.active .page-link {
+  width: 30px;
+  cursor: auto;
+  background-color: #ffffff;
+  border: 0;
+}
+
+.card .dark {
+  background-color: rgb(9, 31, 55);
+}
+img {
+  cursor: pointer;
 }
