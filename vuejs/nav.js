@@ -16,21 +16,10 @@ export default {
         },
 
         searchData() {
-            console.log('NAV SEARCH', this.searchInput)
             this.$emit('search', this.searchInput)
+            this.searchInput = '';
         }
         
-    //   created() {
-    //     // You can call the fetch function here when the component is created
-    //     // For example, to search for movies with a search term "avenger"
-    //     dbProvider.fetch('search/movie/avenger?per_page=6&page=1')
-    //       .then(response => {
-    //         this.searchData = response;
-    //         console.log(this.searchData)
-    //       })
-    //       .catch(error => {
-    //         console.error(error);
-    //       });
     },
     template: `
     <nav class="navbar navbar-expand-lg border border-0.5 rounded-2 {{ mode }}" id="navbar">

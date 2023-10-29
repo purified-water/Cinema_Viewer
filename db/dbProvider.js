@@ -32,7 +32,8 @@ export default {
     if (type === "search") {
       //Tasch smith?per_page=10&page=2”
       //Truoc dau ?
-      const searchTerm = pattern.split("?")[0]
+      const searchTerm = (pattern.split("?")[0]).toLowerCase();
+      console.log('SEARCH TERM', searchTerm)
 
       // Xử lý tìm kiếm
       const perPage = params.get("per_page") || 10;
@@ -44,31 +45,31 @@ export default {
         case 'movie':
             tempData = data.Movies;
             if (pattern) {
-                tempData = data.Movies.filter((movie) => movie.title.includes(searchTerm) || 
-                movie.fullTitle.includes(searchTerm) || 
-                movie.keywords.includes(searchTerm) )
+                tempData = data.Movies.filter((movie) => movie.title.toLowerCase().includes(searchTerm) || 
+                movie.fullTitle.toLowerCase().includes(searchTerm) || 
+                movie.keywords.toLowerCase().includes(searchTerm)) 
             }
             break;
         case 'name':
             tempData = data.Names;
             if (pattern) {
-                tempData = data.Names.filter((name) => name.name.includes(searchTerm));
+                tempData = data.Names.filter((name) => name.name.toLowerCase().includes(searchTerm));
             }
             break;
         case 'top50':
             tempData = data.Top50Movies;
             if (pattern){
-                tempData = data.Top50Movies.filter((movie) => movie.fullTitle.includes(searchTerm) 
-                || movie.title.includes(searchTerm)
-                )
+                tempData = data.Top50Movies.filter((movie) => movie.title.toLowerCase().includes(searchTerm) || 
+                movie.fullTitle.toLowerCase().includes(searchTerm) || 
+                movie.keywords.toLowerCase().includes(searchTerm)) 
             }
             break;
         case 'mostpopular':
             tempData = data.MostPopularMovies;
             if (pattern) {
-                tempData = data.MostPopularMovies.filter((movie)=> movie.fullTitle.includes(searchTerm)
-                || movie.title.includes(searchTerm)
-                )
+                tempData = data.MostPopularMovies.filter((movie) => movie.title.toLowerCase().includes(searchTerm) || 
+                movie.fullTitle.toLowerCase().includes(searchTerm) || 
+                movie.keywords.toLowerCase().includes(searchTerm)) 
             }
             break;
         default:

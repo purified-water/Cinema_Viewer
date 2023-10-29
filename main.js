@@ -165,7 +165,8 @@ export default {
       //Tim kiem
       searchData(searchInput) {
         //Lay movie truoc
-        dbProvider.fetch(`search/movie/${searchInput}`, this.data)
+        console.log('URL', `search/movie/${searchInput}?`)
+        dbProvider.fetch(`search/movie/${searchInput}?`, this.data)
           .then(result => {
             // Access the data inside the fulfilled promise
             this.searchingMovie = result.data;
