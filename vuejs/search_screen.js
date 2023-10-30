@@ -11,7 +11,7 @@ export default {
             console.log('plot', plot)
             if (plot) {
                 //Lay 15 tu cua plot thoi
-                return plot.split(' ').slice(0, 15).join(' ') + "...";
+                return plot.split(' ').slice(0, 12).join(' ') + "...";
             } 
             return '';
        
@@ -39,7 +39,17 @@ export default {
                 <p class="card-text">{{ shortPlot(movie.plot) }}</p>
                 <div class="row d-flex">
                 <p class="col-md-6">{{ movie.runtimeStr }}</p>
-                <p class="col-md-6 d-flex justify-content-end">{{ movie.ratings.imDb }}</p>
+                <div class="col-md-6 d-flex justify-content-end">
+                <p
+                v-if="selectedMovie && selectedMovie.ratings && selectedMovie.ratings.imDb"
+                    >
+                        {{selectedMovie.ratings.imDb}}
+                    </p>
+                    <p v-else-if="selectedMovie && selectedMovie.imDbRating">
+                        {{selectedMovie.imDbRating}}
+                    </p>
+                    <p v-else>N/A</p>
+                </div>
                 </div>
             </div>
             </div>

@@ -135,15 +135,43 @@ export default {
       showMovieDetail(movie) {
         dbProvider.fetch(`detail/movie/${movie.id}`, this.data)
           .then(result => {
-            // Access the data inside the fulfilled promise
+
             this.selectedMovie = result.data;
             console.log('SELECTED', this.selectedMovie);
+
+            if (this.selectedMovie === null || typeof this.selectedMovie === 'undefined') {
+              dbProvider.fetch(`detail/top50/${movie.id}`, this.data)
+              .then(result => {
+    
+                this.selectedMovie = result.data;
+                console.log('SELECTED Agin', this.selectedMovie);
+
+
+                if (this.selectedMovie === null || typeof this.selectedMovie === 'undefined') {
+                  dbProvider.fetch(`detail/mostPopular/${movie.id}`, this.data)
+                  .then(result => {
+        
+                    this.selectedMovie = result.data;
+                    console.log('SELECTED', this.selectedMovie);
+        
+                  })
+                  .catch(error => {
+                    console.error(error);
+                  });
+                }
+              })
+              .catch(error => {
+                console.error(error);
+              });
+            }
 
           })
           .catch(error => {
             console.error(error);
           });
-
+          //If movie is not in db yet
+        
+        
         this.readyToShow = false;
       },
       //Quay ve

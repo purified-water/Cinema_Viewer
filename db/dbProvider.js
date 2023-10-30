@@ -39,7 +39,7 @@ export default {
       const perPage = params.get("per_page") || 10;
       const page = params.get("page") || 1;
       
-      let tempData = null;
+      let tempData;
       // Thực hiện tìm kiếm
       switch (className) {
         case 'movie':
@@ -74,12 +74,47 @@ export default {
             break;
         default:
             break;
-    }
+      }
 
+      //Couldnt get any
+      if (tempData.length === 0) {
+
+        //Tim dien vien
+        const actor = data.Names.filter((name) => name.name.toLowerCase().includes(searchTerm));
+
+        //Lay tung id da dien trong 
+       
+        
+        for (const mov of data.Movies) {
+          const actors = mov.actorList.map(actor => actor.name.toLowerCase());
+
+          for (let i =0; i < actors.length; i++) {
+            if (actors[i].includes(searchTerm)) {
+              tempData.push(mov);
+              break;
+            }
+          }
+          
+        }
+        if (tempData.length === 0) {
+          for (const mov of data.Movies) {
+            const dirs = mov.directorList.map(dir => dir.name.toLowerCase());
+
+            for (let i =0; i < dirs.length; i++) {
+              if (dirs[i].includes(searchTerm)) {
+                tempData.push(mov);
+                break;
+              }
+            }
+            
+          }
+        }
+        
+      }
       const results = tempData;
 
       // Tính toán thông tin phân trang
-      const total = results.length;
+      const total = results.length || 10;
       const totalPage = Math.ceil(total / perPage);
 
       // Trả về kết quả
@@ -96,7 +131,14 @@ export default {
     else if (type === "detail") {
       // Xử lý chi tiết
       let tempData = null;
+      console.log('PATTERN', pattern)
       switch (className) {
+        case 'top50':
+            tempData = data.Top50Movies.find((movie) => movie.id === pattern);
+            break;
+        case 'mostPopular':
+          tempData = data.MostPopularMovies.find((movie) => movie.id === pattern);
+          break;
         case 'movie':
             tempData = data.Movies.find((movie) => movie.id === pattern);
             break;
